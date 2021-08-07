@@ -4,7 +4,7 @@ CREATE TABLE public.users
 (
     id int8 PRIMARY KEY,
     username varchar NOT NULL CHECK (username <> ''),
-    books int8[]
+    books_ids int8[]
 );
 -- +goose StatementEnd
 

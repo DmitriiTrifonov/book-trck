@@ -19,8 +19,12 @@ test-db-local:
 
 .PHONY: migrations-up
 migrations-up:
-	goose -dir ./scripts/migrations/ postgres $(TEST_DB_DSN) up
+	./bin/goose -dir ./scripts/migrations/ postgres $(TEST_DB_DSN) up
 
 .PHONY: migrations-down
 migrations-down:
-	goose -dir ./scripts/migrations/ postgres $(TEST_DB_DSN) down
+	./bin/goose -dir ./scripts/migrations/ postgres $(TEST_DB_DSN) down
+
+.PHONY: install-goose
+install-goose:
+	go get -u github.com/pressly/goose/v3/cmd/goose
