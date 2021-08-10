@@ -2,9 +2,9 @@
 -- +goose StatementBegin
 CREATE TABLE public.users
 (
-    id int8 PRIMARY KEY,
+    id serial PRIMARY KEY,
     username varchar NOT NULL CHECK (username <> ''),
-    books_ids int8[]
+    password varchar NOT NULL CHECK (password <> '')
 );
 -- +goose StatementEnd
 
