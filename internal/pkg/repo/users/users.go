@@ -1,4 +1,4 @@
-package user
+package users
 
 import (
 	"github.com/DmitriiTrifonov/book-trck/internal/pkg/database"
@@ -8,24 +8,24 @@ import (
 	"github.com/pkg/errors"
 )
 
-type UserRepo struct {
+type Repo struct {
 	ds *database.DataStorage
 	helper.HashHelper
 }
 
-func NewUserRepo(ds *database.DataStorage) (*UserRepo, error) {
-	return &UserRepo{ds: ds}, nil
+func NewUserRepo(ds *database.DataStorage) (*Repo, error) {
+	return &Repo{ds: ds}, nil
 }
 
-// Add is used to add a new user
-func (ur *UserRepo) Add(user types.User) error {
+// Add is used to add a new users
+func (ur *Repo) Add(user types.User) error {
 	_, err := ur.Get(user)
 	if err == nil {
-		return errors.Errorf("user %s has already registered", user.UserName)
+		return errors.Errorf("users %s has already registered", user.UserName)
 	}
 
-	q := `INSERT INTO public.users (username, password)
-         VALUES ($1, $2)`
+	q := `INSERT INTO public.users (username, password, created_at)
+         VALUES ($1, $2, now())`
 
 	tr, err := ur.ds.DB.Begin()
 	if err != nil {
@@ -44,13 +44,14 @@ func (ur *UserRepo) Add(user types.User) error {
 	return nil
 }
 
-func (ur *UserRepo) Get(u types.User) (*models.User, error) {
+// Get gets user from database
+func (ur *Repo) Get(u types.User) (*models.User, error) {
 	q := `SELECT id, username, password FROM public.users WHERE username = $1`
 
 	user := &models.User{}
 	err := ur.ds.DB.Get(user, q, u.UserName)
 	if err != nil {
-		return nil, errors.Wrap(err, "user was not found")
+		return nil, errors.Wrap(err, "users was not found")
 	}
 	if user.Password != ur.Encode(u.Password) {
 		return nil, errors.New("password is incorrect")
