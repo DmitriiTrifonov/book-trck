@@ -10,7 +10,7 @@ import (
 
 	"github.com/DmitriiTrifonov/book-trck/internal/config"
 	"github.com/DmitriiTrifonov/book-trck/internal/pkg/database"
-	"github.com/DmitriiTrifonov/book-trck/internal/pkg/repo/user"
+	"github.com/DmitriiTrifonov/book-trck/internal/pkg/repo/users"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -28,7 +28,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	userRepo, err := user.NewUserRepo(dataStorage)
+	userRepo, err := users.NewUserRepo(dataStorage)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,7 +57,7 @@ func main() {
 
 		responseText := fmt.Sprintf("Found: %s", user.UserName)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusBadRequest)
 			responseText = err.Error()
 		}
 		fmt.Fprintf(w, "%s", responseText)
